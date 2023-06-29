@@ -1,0 +1,11 @@
+# dependecies
+node_modules
+
+# misc
+.env
+.env.dev
+.env.prod
+
+# production
+/build
+/dist
