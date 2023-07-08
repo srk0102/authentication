@@ -1,5 +1,5 @@
 
-import { Logger, sendResponse } from '../Utils'
+import { Logger, sendResponse} from '../Utils'
 
 export const signup = (req, res) => {
 	try {
