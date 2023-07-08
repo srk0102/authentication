@@ -1,18 +1,18 @@
 import { model, Schema } from 'mongoose'
 
 const dummySchema = new Schema({
-  mobile: {
-    type: Number,
-    require: true
-  },
-  email: {
-    type: String,
-    require: true
-  }
+	mobile: {
+		type: Number,
+		require: true
+	},
+	email: {
+		type: String,
+		require: true
+	}
 },
-  {
-    timestamps: { createdAt: true, updatedAt: true }
-  }
+{
+	timestamps: { createdAt: true, updatedAt: true }
+}
 )
 
 dummySchema.index({ mobile: 1 })

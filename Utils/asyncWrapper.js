@@ -1,13 +1,13 @@
-import { sendResponse, Logger } from "./util";
+import { sendResponse, Logger } from './util'
 
 export const asyncWrapper = (fn) => async (req, res, next) => {
-  const functionName = fn.name
-  try {
-    return await fn.call(this, req, res, next, functionName)
-  }
-  catch (error) {
-    Logger.error([`AsyncWrapper: ${error.message}`, req.headers])
-    sendResponse(res, INTERNALSERVERERROR, '', {}, 'Oops! Something went wrong')
-    next(error)
-  }
+	const functionName = fn.name
+	try {
+		return await fn.call(this, req, res, next, functionName)
+	}
+	catch (error) {
+		Logger.error([`AsyncWrapper: ${error.message}`, req.headers])
+		sendResponse(res, INTERNALSERVERERROR, '', {}, 'Oops! Something went wrong')
+		next(error)
+	}
 }
