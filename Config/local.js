@@ -35,4 +35,10 @@ export const GOOGLE = {
 }
 
 //CRYPTO KEYS
+export const CRYPTO_KEY = process.env.CRYPTO_KEY
+export const CRYPTO_IV = process.env.CRYPTO_IV
+export const CRYPTO_ALGO = process.env.CRYPTO_ALGO
+
+//JWT
 export const JWT_PRIVATE_KEY = process.env.JWT_PRIVATE_KEY
+export const JWT_EXPIRY_TIME = process.env.JWT_EXPIRY_TIME
