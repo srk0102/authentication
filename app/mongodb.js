@@ -10,17 +10,17 @@ const url = MONGO_URL ? MONGO_URL : `mongodb://${MONGO_USER}:${MONGO_PASSWORD}@$
 
 // Connect to the MongoDB server using Mongoose
 export const mongoConnection = () => {
-  mongoose.connect(url, { useNewUrlParser: true, useUnifiedTopology: true })
-    .then(() => {
-      Logger.success('Connected to MongoDB successfully')
+	mongoose.connect(url, { useNewUrlParser: true, useUnifiedTopology: true })
+		.then(() => {
+			Logger.success('Connected to MongoDB successfully')
 
-      // Perform database operations with Mongoose
-      // ...
+			// Perform database operations with Mongoose
+			// ...
 
-      // Disconnect from MongoDB
-      mongoose.connection.close()
-    })
-    .catch((err) => {
-      Logger.error(err)
-    })
+			// Disconnect from MongoDB
+			mongoose.connection.close()
+		})
+		.catch((err) => {
+			Logger.error(err)
+		})
 }
