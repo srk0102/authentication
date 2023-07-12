@@ -9,18 +9,13 @@ const { MONGO_DB, MONGO_HOST, MONGO_PASSWORD, MONGO_PORT, MONGO_URL, MONGO_USER 
 const url = MONGO_URL ? MONGO_URL : `mongodb://${MONGO_USER}:${MONGO_PASSWORD}@${MONGO_HOST}:${MONGO_PORT}/${MONGO_DB}`
 
 // Connect to the MongoDB server using Mongoose
-export const mongoConnection = () => {
-	mongoose.connect(url, { useNewUrlParser: true, useUnifiedTopology: true })
-		.then(() => {
-			Logger.success('Connected to MongoDB successfully')
-
-			// Perform database operations with Mongoose
-			// ...
-
-			// Disconnect from MongoDB
-			mongoose.connection.close()
-		})
-		.catch((err) => {
-			Logger.error(err)
-		})
+export const mongoConnection = async () => {
+	try {
+		await mongoose.connect(url, { useNewUrlParser: true, useUnifiedTopology: true })
+		Logger.success('Connected to MongoDB successfully')
+	}
+	catch (err) {
+		Logger.error(err.message)
+		throw err
+	}
 }

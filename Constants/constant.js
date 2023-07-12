@@ -1,5 +1,6 @@
 export const SECONDSINDAY = 60 * 60 * 24
 export const SECONDSINHOUR = 60 * 60
+export const FIFTEENMINUTES = 15
 export const TENMINUTES = 10
 export const FIVEMINUTES = 5
 export const INVALIDATTEMPTS = 5
@@ -27,11 +28,3 @@ export const ENCRYPT_DECRYPT_FIELD = [
 	'reference',
 	'corporateEmail'
 ]
-
-export const SOURCE = {
-	RC: [
-		'rc-hb',
-		'rc-rrr',
-		'rc-fc'
-	]
-}

@@ -5,17 +5,17 @@ import { commonValidation } from './utils'
 export const userSignup = {
 	body: Joi.object({
 		phone: commonValidation.contactNo.required(),
-		email: commonValidation.email.required(),
+		email: commonValidation.email,
 		password: commonValidation.password.required(),
-		userName: commonValidation.fullName.required(),
-		whatsappComm: Joi.boolean().required(),
-		emailComm: Joi.boolean().required(),
+		userName: commonValidation.fullName,
+		whatsappComm: Joi.boolean().default(false),
+		emailComm: Joi.boolean().default(false),
 	})
 }
 
 export const userLogin = {
 	body: Joi.object({
-		emailOrPhone: commonValidation.emailOrPhone.required(),
+		phone: commonValidation.emailOrPhone.required(),
 		password: commonValidation.password.required(),
 	})
 }
