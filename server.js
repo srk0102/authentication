@@ -5,7 +5,7 @@ import { PORT } from './Config'
 //Initialize server
 (async () => {
 	try {
-		mongoConnection()
+		await mongoConnection()
 		await redisInit()
 		const app = InitializeApp()
 		app.listen(PORT, () => {

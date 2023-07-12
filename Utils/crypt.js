@@ -21,7 +21,7 @@ export const decrypt = (encryptedValue) => {
 }
 
 export const compare = (encryptedValue, stringToCompare) => {
-	const decipher = crypto.createDecipheriv(CRYPTO_ALGO, CRYPTO_KEY, iv)
+	const decipher = crypto.createDecipheriv(CRYPTO_ALGO, key, iv)
 	let decrypted = decipher.update(encryptedValue, 'hex', 'utf8')
 	decrypted += decipher.final('utf8')
 	return decrypted === stringToCompare

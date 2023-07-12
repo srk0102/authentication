@@ -44,7 +44,7 @@ export const validateInput = (schema) => (req, res, next) => {
 		.prefs({ errors: { label: 'key' } })
 		.validate(object)
 	if (error) {
-		const errorMessage = error.details
+		const errorMessage = error?.details
 			.map((details) => details.message)
 			.join(',')
 		return sendResponse(res, INVALIDREQUEST, 'Invalid request', {}, errorMessage)
@@ -53,3 +53,33 @@ export const validateInput = (schema) => (req, res, next) => {
 	return next()
 }
 
+export const addMinutes = (date, minutes) => {
+	date = dayjs(date)
+	return date.add(minutes, 'minute')
+}
+
+export const addHours = (date, hours) => {
+	date = dayjs(date)
+	return date.add(hours, 'hour')
+}
+
+export const addDays = (date, days) => {
+	date = dayjs(date)
+	return date.add(days, 'day')
+}
+
+export const addMonths = (date, months) => {
+	date = dayjs(date)
+	return date.add(months, 'month')
+}
+
+export const addYears = (date, years) => {
+	date = dayjs(date)
+	return date.add(years, 'year')
+}
+
+export const getMinutesDiff = (date1, date2) => {
+	const diffInMilliseconds = Math.abs(new Date(date2).getTime() - new Date(date1).getTime())
+	const minutes = Math.floor(diffInMilliseconds / (1000 * 60))
+	return minutes
+}
