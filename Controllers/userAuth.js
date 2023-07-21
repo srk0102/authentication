@@ -2,6 +2,8 @@
 import { generateToken } from '../Middlewares'
 import { Logger, sendResponse, encrypt, compare } from '../Utils'
 import { UserService } from '../Services'
+import { META_TOKEN } from '../Config'
+import { SUBSCRIBE } from '../Constants'
 
 export const signup = async (req, res) => {
 	try {
@@ -26,18 +28,45 @@ export const login = async (req, res) => {
 	try {
 		const { phone, password } = req.body
 		const existingUser = await UserService.getOne({ phone })
-		if(!existingUser){
+		if (!existingUser) {
 			return sendResponse(res, UNAUTHORIZED, '', {}, 'You are not registered with us')
 		}
 		const checkUser = compare(existingUser.password, password)
-		if (!checkUser){
+		if (!checkUser) {
 			return sendResponse(res, UNAUTHORIZED, '', {}, 'You have entered wrong password')
 		}
-		const token = await generateToken({userId:existingUser._id, phone })
+		const token = await generateToken({ userId: existingUser._id, phone })
 		return sendResponse(res, SUCCESS, 'Login successful', { token }, '')
 	} catch (err) {
 		Logger.error(err.message)
 		sendResponse(res, INTERNALSERVERERROR, 'Login failed', {}, err.message)
+		throw err
+	}
+}
+
+export const verifyAuth = async (req, res) => {
+	try{
+		sendResponse(res, SUCCESS, 'Token verified', {}, '')
+	}
+	catch(err){
+		Logger.error(err.message)
+		sendResponse(res, INTERNALSERVERERROR, '', {}, err.message)
+		throw err
+	}
+}
+
+export const whatsapp = async (req, res) => {
+	try {
+		const { mode, challenge, verify_token } = req.query.hub
+		if (mode === SUBSCRIBE && verify_token === META_TOKEN) {
+			sendResponse(res, SUCCESS, 'SUCCESS', { challenge })
+		} else {
+			sendResponse(res, FORBIDDEN, '', {}, 'not allowed')
+		}
+	}
+	catch (err) {
+		Logger.error(err.message)
+		sendResponse(res, INTERNALSERVERERROR, '', {}, err.message)
 		throw err
 	}
 }

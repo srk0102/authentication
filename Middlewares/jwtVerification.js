@@ -1,39 +1,40 @@
 import jwt from 'jsonwebtoken'
 
 import { JWT_PRIVATE_KEY, JWT_ALGO, JWT_EXPIRY_TOKEN_TIME, JWT_EXPIRY_REFRESH_TIME } from '../Config'
-import { FIFTEENMINUTES } from '../Constants'
+import { FIFTEENMINUTES, FIVEMINUTES } from '../Constants'
 import { TokenService } from '../Services'
-import { getUtcTime, addHours, addMonths, getMinutesDiff, Logger } from '../Utils'
+import { getUtcTime, addHours, addMonths, getMinutesDiff, Logger, sendResponse } from '../Utils'
 
 export const verifyToken = async (req, res, next) => {
 	try {
 		const { token, refreshtoken } = req.headers
 		const { userId, phone } = decryptToken(token)
 		const checkRefreshToken = decryptToken(refreshtoken)
-		const existingTokens = await TokenService.getOne({token, refreshtoken, userId, status: 'active'})
-		if(!existingTokens){
-			next('Please login again')
+		const existingTokens = await TokenService.getOne({ token, refreshtoken, userId, status: 'active' })
+		if (!existingTokens) {
+			return sendResponse(res, UNAUTHORIZED, '', {}, 'Please login again')
 		}
-		if (getMinutesDiff(getUtcTime(), existingTokens.tkExpiresAt) <= 0){
-			await TokenService.updateOne({ token, refreshtoken, userId, status: 'active' }, { status: 'expired'})
-			next('Please login again')
+		if (getMinutesDiff(getUtcTime(), existingTokens.tkExpiresAt) <= 0 || getMinutesDiff(getUtcTime(), existingTokens.rtkExpiresAt) <= 0) {
+			await TokenService.updateOne({ token, refreshtoken, userId, status: 'active' }, { status: 'expired' })
+			return sendResponse(res, UNAUTHORIZED, '', {}, 'Please login again')
 		}
-		if (getMinutesDiff(getUtcTime(), existingTokens.tkExpiresAt) <= FIFTEENMINUTES && checkRefreshToken){
+		if (getMinutesDiff(getUtcTime(), existingTokens.tkExpiresAt) <= FIFTEENMINUTES && getMinutesDiff(getUtcTime(), existingTokens.rtkExpiresAt) > FIVEMINUTES) {
 			const tkexp = addHours(getUtcTime(), 4)
 			const newToken = jwt.sign({ userId, phone, expiresAt: tkexp }, JWT_PRIVATE_KEY, { expiresIn: JWT_EXPIRY_TOKEN_TIME, algorithm: JWT_ALGO })
-			await TokenService.updateOne({ token, refreshtoken, userId, status: 'active' }, { token: newToken, tkExpiresAt: tkexp })
+			var updatedToken = await TokenService.updateOne({ token, refreshtoken, userId, status: 'active' }, { token: newToken, tkExpiresAt: tkexp })
 		}
+		res.token = updatedToken
 		next()
 	}
 	catch (err) {
-		next(err.message)
+		return sendResponse(res, UNAUTHORIZED, '', {}, err.message)
 	}
 }
 
 export const generateToken = async (payload) => {
 	try {
 		const existingTokens = await TokenService.getOne({ userId: payload.userId, status: 'active' }, { token: 1, refreshtoken: 1, _id: 0 })
-		if(existingTokens){
+		if (existingTokens) {
 			return existingTokens
 		}
 		const tkexp = addHours(getUtcTime(), 4)

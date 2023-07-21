@@ -23,6 +23,7 @@ export const sendResponse = (res, status, message, data = {}, error = null) => {
 			message,
 			data,
 			error: ERRORS[error] ? ERRORS[error] : error,
+			token : res.token ? res.token : null,
 			currentTimeStampInUTC: getUtcTime()
 		}
 	)
@@ -38,7 +39,7 @@ export const pick = (object, keys) => {
 }
 
 export const validateInput = (schema) => (req, res, next) => {
-	const validSchema = pick(schema, ['params', 'query', 'body'])
+	const validSchema = pick(schema, ['params', 'query', 'body', 'headers'])
 	const object = pick(req, Object.keys(validSchema))
 	const { value, error } = Joi.compile(validSchema)
 		.prefs({ errors: { label: 'key' } })

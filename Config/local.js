@@ -44,3 +44,6 @@ export const JWT_PRIVATE_KEY = process.env.JWT_PRIVATE_KEY
 export const JWT_EXPIRY_TOKEN_TIME = process.env.JWT_EXPIRY_TOKEN_TIME
 export const JWT_EXPIRY_REFRESH_TIME = process.env.JWT_EXPIRY_REFRESH_TIME
 export const JWT_ALGO = process.env.JWT_ALGO
+
+//META
+export const META_TOKEN = process.env.META_TOKEN

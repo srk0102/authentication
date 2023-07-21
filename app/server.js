@@ -2,7 +2,7 @@ import express, { json } from 'express'
 import helmet from 'helmet'
 import cors from 'cors'
 import cookieSession from 'cookie-session'
-import { initialize } from 'passport'
+import bodyParser from 'body-parser'
 
 import { FE_URL, COMPANY_NAME } from '../Config'
 
@@ -15,6 +15,8 @@ export const InitializeApp = () => {
 
 	// set security HTTP headers
 	app.use(helmet())
+
+	app.use(bodyParser.json())
 
 	//middleWares
 	app.use(json())

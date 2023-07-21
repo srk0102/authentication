@@ -7,6 +7,7 @@ export const INVALIDATTEMPTS = 5
 export const MAXALLOWEDLOGINS = 5
 export const REFERENCE_TYPE = ['contactno', 'email']
 export const TOKEN_STATUS = ['active', 'expired', 'suspended', 'loggedout']
+export const SUBSCRIBE = 'subscribe'
 export const SESSION_UID_LENGTH = 18
 export const PHONE_REGEX = /^[0-9]{8,14}$/
 export const COUNTRY_CODE_REGEX = /^(\+?\d{1,3}|\d{1,3})$/
