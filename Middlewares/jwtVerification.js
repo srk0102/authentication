@@ -9,7 +9,7 @@ export const verifyToken = async (req, res, next) => {
 	try {
 		const { token, refreshtoken } = req.headers
 		const { userId, phone } = decryptToken(token)
-		const checkRefreshToken = decryptToken(refreshtoken)
+		decryptToken(refreshtoken)
 		const existingTokens = await TokenService.getOne({ token, refreshtoken, userId, status: 'active' })
 		if (!existingTokens) {
 			return sendResponse(res, UNAUTHORIZED, '', {}, 'Please login again')
