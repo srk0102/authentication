@@ -12,14 +12,19 @@ export const verifyToken = async (req, res, next) => {
 		decryptToken(refreshtoken)
 		const existingTokens = await TokenService.getOne({ token, refreshtoken, userId, status: 'active' })
 		if (!existingTokens) {
-			return sendResponse(res, UNAUTHORIZED, '', {}, 'Please login again')
+			return sendResponse(res, UNAUTHORIZED, '', {}, 'Please login')
 		}
-		if (getMinutesDiff(getUtcTime(), existingTokens.tkExpiresAt) <= 0 || getMinutesDiff(getUtcTime(), existingTokens.rtkExpiresAt) <= 0) {
+		const currentTime = getUtcTime()
+		const { tkExpiresAt, rtkExpiresAt } = existingTokens
+		const tokenExpiryDiff = getMinutesDiff(currentTime, tkExpiresAt)
+		const refreshTokenExpiryDiff = getMinutesDiff(currentTime, rtkExpiresAt)
+
+		if (tokenExpiryDiff <= 0 || refreshTokenExpiryDiff <= 0) {
 			await TokenService.updateOne({ token, refreshtoken, userId, status: 'active' }, { status: 'expired' })
 			return sendResponse(res, UNAUTHORIZED, '', {}, 'Please login again')
 		}
-		if (getMinutesDiff(getUtcTime(), existingTokens.tkExpiresAt) <= FIFTEENMINUTES && getMinutesDiff(getUtcTime(), existingTokens.rtkExpiresAt) > FIVEMINUTES) {
-			const tkexp = addHours(getUtcTime(), 4)
+		if (tokenExpiryDiff <= FIFTEENMINUTES && refreshTokenExpiryDiff > FIVEMINUTES) {
+			const tkexp = addHours(currentTime, 4)
 			const newToken = jwt.sign({ userId, phone, expiresAt: tkexp }, JWT_PRIVATE_KEY, { expiresIn: JWT_EXPIRY_TOKEN_TIME, algorithm: JWT_ALGO })
 			var updatedToken = await TokenService.updateOne({ token, refreshtoken, userId, status: 'active' }, { token: newToken, tkExpiresAt: tkexp })
 		}
@@ -37,13 +42,17 @@ export const generateToken = async (payload) => {
 		if (existingTokens) {
 			return existingTokens
 		}
-		const tkexp = addHours(getUtcTime(), 4)
-		const rtkexp = addMonths(getUtcTime(), 6)
+		const currentTime = getUtcTime()
+		const tkexp = addHours(currentTime, 4)
+		const rtkexp = addMonths(currentTime, 6)
+
 		const tokens = {
 			token: jwt.sign({ ...payload, expiresAt: tkexp }, JWT_PRIVATE_KEY, { expiresIn: JWT_EXPIRY_TOKEN_TIME, algorithm: JWT_ALGO }),
 			refreshtoken: jwt.sign({ ...payload, expiresAt: rtkexp }, JWT_PRIVATE_KEY, { expiresIn: JWT_EXPIRY_REFRESH_TIME, algorithm: JWT_ALGO })
 		}
+
 		await TokenService.create({ userId: payload.userId, ...tokens, tkExpiresAt: tkexp, rtkExpiresAt: rtkexp })
+
 		return tokens
 	} catch (err) {
 		Logger.error(err.message)

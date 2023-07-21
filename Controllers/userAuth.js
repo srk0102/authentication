@@ -11,7 +11,7 @@ export const signup = async (req, res) => {
 		const encryptedPassword = encrypt(password)
 		const existingUser = await UserService.getOne({ $or: [{ phone }, { email }] }, { phone: 1, email: 1, _id: 0 })
 		if (existingUser) {
-			return sendResponse(res, FORBIDDEN, '', { existingUser }, 'user already exist')
+			return sendResponse(res, FORBIDDEN, '', { existingUser }, 'Already registered with us, Try to login')
 		}
 		const newUser = await UserService.create({ phone, email, password: encryptedPassword, userName, whatsappComm, emailComm })
 		const token = await generateToken({ phone, userId: newUser._id })
@@ -45,10 +45,10 @@ export const login = async (req, res) => {
 }
 
 export const verifyAuth = async (req, res) => {
-	try{
+	try {
 		sendResponse(res, SUCCESS, 'Token verified', {}, '')
 	}
-	catch(err){
+	catch (err) {
 		Logger.error(err.message)
 		sendResponse(res, INTERNALSERVERERROR, '', {}, err.message)
 		throw err
