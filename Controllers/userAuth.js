@@ -2,8 +2,6 @@
 import { generateToken } from '../Middlewares'
 import { Logger, sendResponse, encrypt, compare } from '../Utils'
 import { UserService } from '../Services'
-import { META_TOKEN } from '../Config'
-import { SUBSCRIBE } from '../Constants'
 
 export const signup = async (req, res) => {
 	try {
@@ -47,22 +45,6 @@ export const login = async (req, res) => {
 export const verifyAuth = async (req, res) => {
 	try {
 		sendResponse(res, SUCCESS, 'Token verified', {}, '')
-	}
-	catch (err) {
-		Logger.error(err.message)
-		sendResponse(res, INTERNALSERVERERROR, '', {}, err.message)
-		throw err
-	}
-}
-
-export const whatsapp = async (req, res) => {
-	try {
-		const { mode, challenge, verify_token } = req.query.hub
-		if (mode === SUBSCRIBE && verify_token === META_TOKEN) {
-			sendResponse(res, SUCCESS, 'SUCCESS', { challenge })
-		} else {
-			sendResponse(res, FORBIDDEN, '', {}, 'not allowed')
-		}
 	}
 	catch (err) {
 		Logger.error(err.message)

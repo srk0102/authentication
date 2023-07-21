@@ -23,7 +23,7 @@ export const sendResponse = (res, status, message, data = {}, error = null) => {
 			message,
 			data,
 			error: ERRORS[error] ? ERRORS[error] : error,
-			token : res.token ? res.token : null,
+			...(res?.token && { token: res.token }),
 			currentTimeStampInUTC: getUtcTime()
 		}
 	)

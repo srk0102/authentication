@@ -18,10 +18,9 @@ export const sendOtpSchema = {
 	})
 }
 
-export const validateOtpSchema = {
+export const verifyOtpSchema = {
 	body: Joi.object({
 		otp: commonValidation.otp,
-		source: commonValidation.source,
 		referenceType: commonValidation.referenceType.default('contactno'),
 		reference: commonValidation.reference,
 		countryCode: commonValidation.countryCode,

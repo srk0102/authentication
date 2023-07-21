@@ -1,9 +1,11 @@
 import { UserRouter } from './userAuth'
+import { UserMessage } from './userMessage'
 
 import { Logger } from '../Utils'
 
 const Routes = [
-	{ path: '/user', router: UserRouter }
+	{ path: '/user', router: UserRouter },
+	{ path: '/message', router: UserMessage }
 ]
 
 Routes.init = (app) => {
