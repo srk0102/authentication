@@ -7,6 +7,7 @@ export const sendOtpSchema = {
 		reference: commonValidation.reference,
 		referenceType: commonValidation.referenceType.required(),
 		countryCode: commonValidation.countryCodeWithReferenceTypeContactNo,
+		source: commonValidation.source.required()
 	}).custom((value, helper) => {
 		if (['+91', '91'].includes(value.countryCode) && value.reference.toString().length !== 10 && value.referenceType == 'contactno') {
 			return helper.message('Contact number should be 10 numbers')

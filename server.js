@@ -1,6 +1,6 @@
 import { mongoConnection, redisInit, InitializeApp } from './app'
 import { Logger } from './Utils'
-import { PORT } from './Config'
+import { PORT, NODE_ENV } from './Config'
 
 //Initialize server
 (async () => {
@@ -9,7 +9,7 @@ import { PORT } from './Config'
 		await redisInit()
 		const app = InitializeApp()
 		app.listen(PORT, () => {
-			Logger.success(`Server Running on ${PORT}`)
+			Logger.success(`Server Running on ${PORT}, environment: ${NODE_ENV}`)
 		})
 	}
 	catch (err) {

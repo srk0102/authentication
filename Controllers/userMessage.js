@@ -5,8 +5,8 @@ import { SUBSCRIBE } from '../Constants'
 
 export const sendOtp = async (req, res) => {
 	try {
-		const { reference, referenceType, countryCode } = req.body
-		const otp = await generateOtp(reference, referenceType, countryCode, 4)
+		const { reference, referenceType, countryCode, source } = req.body
+		const otp = await generateOtp(reference, referenceType, countryCode, source, 4)
 		if (referenceType === 'contactno') {
 			await sendWhatsappMessage(countryCode + reference, otp)
 		} else {
@@ -23,8 +23,8 @@ export const sendOtp = async (req, res) => {
 
 export const validateOtp = async (req, res) => {
 	try {
-		const { reference, referenceType, countryCode, otp } = req.body
-		const verification = await verifyOtp(reference, referenceType, countryCode, otp)
+		const { reference, referenceType, countryCode, source, otp } = req.body
+		const verification = await verifyOtp(reference, referenceType, countryCode, source, otp)
 		if (verification) {
 			await deleteOtp(reference, referenceType, countryCode)
 			return sendResponse(res, SUCCESS, 'Otp verified successfully', {}, '')

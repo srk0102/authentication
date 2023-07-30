@@ -3,6 +3,7 @@ import JoiDate from '@joi/date'
 import dayjs from 'dayjs'
 import isSameOrAfter from 'dayjs/plugin/isSameOrAfter'
 import customParseFormat from 'dayjs/plugin/customParseFormat'
+import { USER_TYPE, GENDER, SOURCE } from '../Constants'
 
 const Joi = JoiBase.extend(JoiDate) // extend Joi with Joi Date
 
@@ -21,12 +22,13 @@ export const commonValidation = {
 	fullName: Joi.string().min(1).max(75),
 	contactNo: Joi.string().pattern(PHONE_REGEX),
 	dob: Joi.date().format(DATEFORMAT).raw(),
+	userType: Joi.string().lowercase().trim().valid(...USER_TYPE),
 	annualIncome: Joi.number().greater(1).less(50000000),
-	source: Joi.string().lowercase().trim(),
+	source: Joi.string().lowercase().trim().valid(...SOURCE),
 	isWhatsappCommEnabled: Joi.boolean(),
 	emailOrPhone: Joi.string().required(),
 	password: Joi.string().min(8).max(16).pattern(PASSWORD_REGEX).message('password should contain at-least one capital letter, one small letter, one symbol and one number.The length of password should be in between 8-16.'),
-	gender: Joi.string().trim().valid('Male', 'Female', 'Other'),
+	gender: Joi.string().trim().valid(...GENDER),
 	profilePic: Joi.string().trim(),
 	isActive: Joi.boolean(),
 	startDate: Joi.string(),

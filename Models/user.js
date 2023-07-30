@@ -1,9 +1,10 @@
 import { model, Schema } from 'mongoose'
+import { USER_TYPE, GENDER } from '../Constants'
 
 const userSchema = new Schema({
 	phone: {
 		type: Number,
-		require: true
+		required: true
 	},
 	email: {
 		type: String,
@@ -11,14 +12,29 @@ const userSchema = new Schema({
 	password: {
 		type: String,
 	},
+	userType: {
+		type: String,
+		enum:  USER_TYPE,
+		required: true
+	},
+	gender:{
+		type: String,
+		enum: GENDER,
+		default: 'prefer not to say'
+	},
 	userName: {
-		type: String
+		type: String,
+		required: true,
 	},
 	whatsappComm: {
 		type: Boolean,
 		default: false
 	},
 	emailComm: {
+		type: Boolean,
+		default: false
+	},
+	verified: {
 		type: Boolean,
 		default: false
 	}
@@ -28,6 +44,6 @@ const userSchema = new Schema({
 }
 )
 
-userSchema.index({ phone: 1,  email: 1})
+userSchema.index({ phone: 1, email: 1 })
 
 export const USER = model('user', userSchema)

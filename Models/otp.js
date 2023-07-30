@@ -1,6 +1,6 @@
 import { model, Schema } from 'mongoose'
 
-import { REFERENCE_TYPE } from '../Constants'
+import { REFERENCE_TYPE, SOURCE } from '../Constants'
 
 const otpSchema = new Schema({
 	reference: {
@@ -16,9 +16,14 @@ const otpSchema = new Schema({
 		type: String,
 		required: true
 	},
+	source:{
+		type: String,
+		required: true,
+		enum: SOURCE
+	},
 	otpExpiresAt: {
 		type: Date,
-		require: true
+		required: true
 	},
 	verified: {
 		type: Boolean,

@@ -1,10 +1,12 @@
 import express, { json } from 'express'
 import helmet from 'helmet'
 import cors from 'cors'
+import csrf from 'csurf'
 import cookieSession from 'cookie-session'
+import cookieParser from 'cookie-parser'
 import bodyParser from 'body-parser'
 
-import { FE_URL, COMPANY_NAME } from '../Config'
+import { FE_URL, COMPANY_NAME, NODE_ENV } from '../Config'
 
 import { Routes } from '../Routes'
 import { sendResponse, Logger } from '../Utils'
@@ -27,13 +29,20 @@ export const InitializeApp = () => {
 		credentials: true,
 	}))
 
+	app.use(cookieParser())
+
 	app.use(
 		cookieSession({
 			name: 'session',
 			keys: [COMPANY_NAME],
 			maxAge: 24 * 60 * 60 * 100,
+			secure: NODE_ENV === 'prod',
+			httpOnly: true,
+			signed: true
 		})
 	)
+
+	NODE_ENV === 'prod' && app.use(csrf({ cookie: true }))
 
 	Routes.init(app)
 

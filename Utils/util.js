@@ -14,7 +14,7 @@ export const redisOperation = async (param, operation) => {
 	}))
 }
 
-export const generateOtp = async (reference, referenceType, countryCode = '', no_digits = 4) => {
+export const generateOtp = async (reference, referenceType, countryCode = '', source, no_digits = 4) => {
 
 	if (no_digits <= 0 || no_digits > 10) {
 		throw new Error('Number of digits should be between 1 and 10.')
@@ -26,18 +26,18 @@ export const generateOtp = async (reference, referenceType, countryCode = '', no
 	const preOtp = Math.floor(Math.random() * (max - min + 1)) + min
 	const otp = preOtp.toString().padStart(no_digits, '0')
 
-	await OtpService.create({ reference: encrypt(reference + countryCode), referenceType, otp, otpExpiresAt: addMinutes(getUtcTime(), TENMINUTES) })
+	await OtpService.create({ reference: encrypt(reference + countryCode), referenceType, source, otp, otpExpiresAt: addMinutes(getUtcTime(), TENMINUTES) })
 	return otp
 }
 
-export const verifyOtp = async (reference, referenceType, countryCode = '', otp) => {
+export const verifyOtp = async (reference, referenceType, countryCode = '', source, otp) => {
 	const currentTime = getUtcTime()
 	reference = encrypt(reference + countryCode)
 
-	const otpData = await OtpService.getOne({ reference, referenceType, otp, verified: false })
+	const otpData = await OtpService.getOne({ reference, referenceType, otp, source, verified: false })
 
 	if (otpData && (0 < getMinutesDiff(currentTime, otpData.otpExpiresAt) < TENMINUTES)) {
-		await OtpService.updateMany({ reference, referenceType }, { verified: true })
+		await OtpService.updateMany({ reference, referenceType, source }, { verified: true })
 		return true
 	} else {
 		return false
