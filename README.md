@@ -82,12 +82,14 @@ The microservice can be configured using environment variables. Create a `.env` 
 
 ```
 PORT=3000
-DB_CONNECTION_STRING=mongodb://localhost:27017/authdb
-JWT_SECRET=mySecretKey
-JWT_EXPIRATION=86400
+MONGO_URL=mongodb://localhost:27017/authdb
+JWT_PRIVATE_KEY=mySecretKey
+JWT_EXPIRY_TOKEN_TIME=86400
+JWT_EXPIRY_REFRESH_TIME=182d
 MAILER_SERVICE=your-mail-service
 MAILER_USER=your-mail-user
 MAILER_PASS=your-mail-password
+FE_URL=http://yoururl.com
 ```
 
 Replace the placeholder values with appropriate configuration details.
