@@ -1,16 +1,15 @@
 import jwt from 'jsonwebtoken'
 
-import { JWT_PRIVATE_KEY, JWT_ALGO, JWT_EXPIRY_TOKEN_TIME, JWT_EXPIRY_REFRESH_TIME } from '../Config'
+import { JWT_PRIVATE_KEY, JWT_VALIDATION_KEY, JWT_ALGO, JWT_EXPIRY_TOKEN_TIME, JWT_EXPIRY_REFRESH_TIME } from '../Config'
 import { FIFTEENMINUTES, FIVEMINUTES } from '../Constants'
 import { TokenService } from '../Services'
 import { getUtcTime, addHours, addMonths, getMinutesDiff, Logger, sendResponse } from '../Utils'
 
 export const verifyToken = async (req, res, next) => {
 	try {
-		const { token, refreshtoken } = req.headers
-		const { userId, phone } = decryptToken(token)
-		decryptToken(refreshtoken)
-		const existingTokens = await TokenService.getOne({ token, refreshtoken, userId, status: 'active' })
+		const { token } = req.headers
+		const { userId } = decryptToken(token)
+		const existingTokens = await TokenService.getOne({ token, userId, status: 'active' })
 		if (!existingTokens) {
 			return sendResponse(res, UNAUTHORIZED, '', {}, 'Please login')
 		}
@@ -25,10 +24,14 @@ export const verifyToken = async (req, res, next) => {
 		}
 		if (tokenExpiryDiff <= FIFTEENMINUTES && refreshTokenExpiryDiff > FIVEMINUTES) {
 			const tkexp = addHours(currentTime, 4)
-			const newToken = jwt.sign({ userId, phone, expiresAt: tkexp }, JWT_PRIVATE_KEY, { expiresIn: JWT_EXPIRY_TOKEN_TIME, algorithm: JWT_ALGO })
+			const newToken = jwt.sign({ userId, expiresAt: tkexp }, JWT_PRIVATE_KEY, { expiresIn: JWT_EXPIRY_TOKEN_TIME, algorithm: JWT_ALGO })
 			var updatedToken = await TokenService.updateOne({ token, refreshtoken, userId, status: 'active' }, { token: newToken, tkExpiresAt: tkexp })
+			res.cookie('token', updatedToken.token, {
+				httpOnly: true,
+				secure: NODE_ENV === 'prod',
+			})
 		}
-		res.token = updatedToken
+		res.locals.userId = userId
 		next()
 	}
 	catch (err) {
@@ -60,11 +63,26 @@ export const generateToken = async (payload) => {
 	}
 }
 
-export const decryptToken = (token) => {
+export const generateSignUpToken = async (payload) => {
 	try {
-		const decoded = jwt.verify(token, JWT_PRIVATE_KEY, { algorithm: JWT_ALGO })
-		return decoded
+		const currentTime = getUtcTime()
+		const tkexp = addHours(currentTime, 24)
+
+		const token = jwt.sign({ ...payload, expiresAt: tkexp }, JWT_VALIDATION_KEY, { expiresIn: JWT_EXPIRY_TOKEN_TIME, algorithm: JWT_ALGO })
+
+		return token
 	} catch (err) {
+		Logger.error(err.message)
 		throw err
 	}
+}
+
+export const decryptValidateToken = (token) => {
+	const decoded = jwt.verify(token, JWT_VALIDATION_KEY, { algorithm: JWT_ALGO })
+	return decoded
+}
+
+export const decryptToken = (token) => {
+	const decoded = jwt.verify(token, JWT_PRIVATE_KEY, { algorithm: JWT_ALGO })
+	return decoded
 }

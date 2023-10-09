@@ -5,16 +5,14 @@ export const TENMINUTES = 10
 export const FIVEMINUTES = 5
 export const INVALIDATTEMPTS = 5
 export const MAXALLOWEDLOGINS = 5
-export const CONTACTNO = 'contactno'
+export const LIMIT = 50
 export const EMAIL = 'email'
-export const REFERENCE_TYPE = [CONTACTNO, EMAIL]
+export const USER = 'user'
 export const TOKEN_STATUS = ['active', 'expired', 'suspended', 'loggedout']
-export const USER_TYPE = ['patient', 'doctor', 'receptionist', 'admin']
 export const GENDER = ['Male', 'Female', 'Other', 'prefer not to say']
 export const SIGNUP = 'signup'
 export const SIGNIN = 'signin'
 export const RESETPASSWORD = 'resetpassword'
-export const SOURCE = [SIGNUP, SIGNIN, RESETPASSWORD]
 export const SUBSCRIBE = 'subscribe'
 export const SESSION_UID_LENGTH = 18
 export const PHONE_REGEX = /^[0-9]{8,14}$/
@@ -24,16 +22,13 @@ export const NAME_REGEX = /^[a-zA-z.' ]+([ ][a-zA-Z.' ]+)*$/
 export const PASSWORD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,16}$/
 
 export const EMAIL_TEMPLATE_KEYS = {
-	nps: 'emailVerifyWithOtp',
+	resetPassword: 'emailVerifyWithOtp',
 	verifyEmail: 'verifyEmail'
 }
 
 export const DATEFORMAT = 'DD/MM/YYYY'
 
-export const ENCRYPT_DECRYPT_FIELD = [
-	'contactNo',
-	'alternateContactNo',
-	'personalEmail',
-	'reference',
-	'corporateEmail'
-]
+export const VALIDATION_TOKENS= {
+	emailVerification : 'email-verification',
+	resetPassword: 'reset-password'
+}

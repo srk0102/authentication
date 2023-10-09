@@ -9,7 +9,7 @@ import bodyParser from 'body-parser'
 import { FE_URL, COMPANY_NAME, NODE_ENV } from '../Config'
 
 import { Routes } from '../Routes'
-import { sendResponse, Logger } from '../Utils'
+import { sendResponse, Logger, logRequest } from '../Utils'
 
 export const InitializeApp = () => {
 
@@ -43,6 +43,8 @@ export const InitializeApp = () => {
 	)
 
 	NODE_ENV === 'prod' && app.use(csrf({ cookie: true }))
+
+	app.use(logRequest)
 
 	Routes.init(app)
 

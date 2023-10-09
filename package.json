@@ -5,7 +5,6 @@
   "main": "server.js",
   "scripts": {
     "start": "babel-node .",
-    "local": "nodemon --exec NODE_ENV=local npm run start",
     "dev": "nodemon --exec NODE_ENV=dev npm run start",
     "build": "rm -rf dist && babel . --out-dir dist --ignore node_modules && cp package.json dist",
     "serve": "node dist/index.js",

@@ -3,32 +3,18 @@ import JoiDate from '@joi/date'
 import dayjs from 'dayjs'
 import isSameOrAfter from 'dayjs/plugin/isSameOrAfter'
 import customParseFormat from 'dayjs/plugin/customParseFormat'
-import { USER_TYPE, GENDER, SOURCE } from '../Constants'
 
 const Joi = JoiBase.extend(JoiDate) // extend Joi with Joi Date
 
-import { REFERENCE_TYPE, PHONE_REGEX, COUNTRY_CODE_REGEX, DATEFORMAT, PASSWORD_REGEX } from '../Constants'
+import { DATEFORMAT, PASSWORD_REGEX } from '../Constants'
 
 export const commonValidation = {
-	reference: Joi.required().when('referenceType', { is: 'email', then: Joi.string().min(6).max(50).email(), otherwise: Joi.string().pattern(PHONE_REGEX) }),
-	referenceType: Joi.string().lowercase().valid(...REFERENCE_TYPE),
-	countryCode: Joi.string().pattern(COUNTRY_CODE_REGEX),
-	countryCodeWithOtp: Joi.string().pattern(COUNTRY_CODE_REGEX).when('otp', {
-		is: Joi.exist(), then: Joi.required(), otherwise: Joi.optional()
-	}),
-	countryCodeWithReferenceTypeContactNo: Joi.string().pattern(COUNTRY_CODE_REGEX).when('referenceType', { is: 'contactno', then: Joi.required(), otherwise: Joi.optional() }),
 	otp: Joi.string().min(4).max(4),
 	email: Joi.string().email(),
 	fullName: Joi.string().min(1).max(75),
-	contactNo: Joi.string().pattern(PHONE_REGEX),
 	dob: Joi.date().format(DATEFORMAT).raw(),
-	userType: Joi.string().lowercase().trim().valid(...USER_TYPE),
-	annualIncome: Joi.number().greater(1).less(50000000),
-	source: Joi.string().lowercase().trim().valid(...SOURCE),
-	isWhatsappCommEnabled: Joi.boolean(),
-	emailOrPhone: Joi.string().required(),
+	source: Joi.string().lowercase().trim(),
 	password: Joi.string().min(8).max(16).pattern(PASSWORD_REGEX).message('password should contain at-least one capital letter, one small letter, one symbol and one number.The length of password should be in between 8-16.'),
-	gender: Joi.string().trim().valid(...GENDER),
 	profilePic: Joi.string().trim(),
 	isActive: Joi.boolean(),
 	startDate: Joi.string(),

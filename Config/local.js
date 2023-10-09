@@ -11,6 +11,7 @@ export const PORT = process.env.PORT ? process.env.PORT : 8000
 export const FE_URL = process.env.FE_URL
 export const BE_URL = process.env.BE_URL
 export const APP_URL = process.env.APP_URL
+export const NOTIFICATION_URL = process.env.NOTIFICATION_URL
 
 // DATA BASE
 export const MONGO = {
@@ -44,6 +45,7 @@ export const JWT_PRIVATE_KEY = process.env.JWT_PRIVATE_KEY
 export const JWT_EXPIRY_TOKEN_TIME = process.env.JWT_EXPIRY_TOKEN_TIME
 export const JWT_EXPIRY_REFRESH_TIME = process.env.JWT_EXPIRY_REFRESH_TIME
 export const JWT_ALGO = process.env.JWT_ALGO
+export const JWT_VALIDATION_KEY = process.env.JWT_VALIDATION_KEY
 
 //META
 export const META_TOKEN = process.env.META_TOKEN
