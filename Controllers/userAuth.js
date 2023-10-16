@@ -1,9 +1,10 @@
+import axios from 'axios'
 
 import { generateToken, generateSignUpToken, decryptValidateToken } from '../Middlewares'
 import { Logger, sendResponse, encrypt, compare } from '../Utils'
 import { UserService } from '../Services'
-import { NODE_ENV } from '../Config'
-import { VALIDATION_TOKENS } from '../Constants'
+import { NODE_ENV, MAILING_SERVICE } from '../Config'
+import { VALIDATION_TOKENS, EMAIL_TEMPLATE_KEYS } from '../Constants'
 import { Types } from 'mongoose'
 
 export const signup = async (req, res) => {
@@ -15,9 +16,20 @@ export const signup = async (req, res) => {
 			return sendResponse(res, FORBIDDEN, '', { existingUser }, `Welcome back ${existingUser.userName}! Let's get you logged in!`)
 		}
 		const newUser = await UserService.create({ email, password: encryptedPassword, userName, source })
-		const token = await generateSignUpToken({ userId: newUser._id, source: VALIDATION_TOKENS.emailVerification })
+		const verificationLink = await generateSignUpToken({ userId: newUser._id, source: VALIDATION_TOKENS.emailVerification })
 
-		//TODO - send tokens to user email using notification service
+		const mailOptions = {
+			to: email,
+			source: EMAIL_TEMPLATE_KEYS.verifyEmail,
+			subject: 'verification email from content-creators-hub',
+			body: {
+				userName,
+				verificationLink
+			}
+		}
+
+		axios.post(MAILING_SERVICE.WELCOME, {to:email, userName})
+		await axios.post(MAILING_SERVICE.SOURCE_EMAIL, mailOptions)
 
 		return sendResponse(res, SUCCESS, 'Check your registered email for a magical message! 💌 Verify within 24 hours. 🕒✨', {}, '')
 	}

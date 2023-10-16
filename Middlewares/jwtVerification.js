@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken'
 
-import { JWT_PRIVATE_KEY, JWT_VALIDATION_KEY, JWT_ALGO, JWT_EXPIRY_TOKEN_TIME, JWT_EXPIRY_REFRESH_TIME } from '../Config'
+import { JWT_PRIVATE_KEY, JWT_VALIDATION_KEY, JWT_ALGO, JWT_EXPIRY_TOKEN_TIME, JWT_EXPIRY_REFRESH_TIME, BE_URL } from '../Config'
 import { FIFTEENMINUTES, FIVEMINUTES } from '../Constants'
 import { TokenService } from '../Services'
 import { getUtcTime, addHours, addMonths, getMinutesDiff, Logger, sendResponse } from '../Utils'
@@ -70,7 +70,9 @@ export const generateSignUpToken = async (payload) => {
 
 		const token = jwt.sign({ ...payload, expiresAt: tkexp }, JWT_VALIDATION_KEY, { expiresIn: JWT_EXPIRY_TOKEN_TIME, algorithm: JWT_ALGO })
 
-		return token
+		const linkToSignup = BE_URL +'auth/user/verify-email/' + token
+
+		return linkToSignup
 	} catch (err) {
 		Logger.error(err.message)
 		throw err
