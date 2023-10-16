@@ -1,4 +1,4 @@
-import { sendResponse, Logger } from './util'
+import { sendResponse, Logger } from '../Utils'
 
 export const asyncWrapper = (fn) => async (req, res, next) => {
 	const functionName = fn.name
