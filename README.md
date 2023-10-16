@@ -42,7 +42,6 @@ The Authentication Microservice provides secure user authentication and authoriz
    ```
    npm start -> for the prod environment
    npm run dev -> for the dev environment
-   npm run local -> for the local environment
    ```
 
 ## Usage
@@ -62,7 +61,7 @@ The Authentication Microservice exposes the following API endpoints:
 - `POST /reset-password`: Password reset. Sets a new password after receiving a valid reset token.
 - `GET /profile`: Get a user profile. Requires a valid JWT token for authentication.
 
-For detailed information on request parameters and responses, see the [API documentation](./api-docs.md).
+For detailed information on request parameters and responses, see the [API documentation](./api-docs.md "API DOCUMENTATION").
 
 ## Authentication Flow
 

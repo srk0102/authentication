@@ -49,3 +49,9 @@ export const JWT_VALIDATION_KEY = process.env.JWT_VALIDATION_KEY
 
 //META
 export const META_TOKEN = process.env.META_TOKEN
+
+//MICROSERVICES
+export const MAILING_SERVICE = {
+	WELCOME: process.env.NOTIFICATION_URL + '/email/welcome',
+	SOURCE_EMAIL: process.env.NOTIFICATION_URL + '/email/send-source-email'
+}

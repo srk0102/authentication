@@ -22,8 +22,9 @@ export const NAME_REGEX = /^[a-zA-z.' ]+([ ][a-zA-Z.' ]+)*$/
 export const PASSWORD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,16}$/
 
 export const EMAIL_TEMPLATE_KEYS = {
-	resetPassword: 'emailVerifyWithOtp',
-	verifyEmail: 'verifyEmail'
+	resetPassword: 'reset-password',
+	verifyEmail: 'emailVerification',
+	welcome: 'welcome'
 }
 
 export const DATEFORMAT = 'DD/MM/YYYY'
