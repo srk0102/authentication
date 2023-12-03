@@ -7,7 +7,8 @@ export const userSignup = {
 		email: commonValidation.email.required(),
 		userName: commonValidation.fullName.required(),
 		source: commonValidation.source.required(),
-		password: commonValidation.password.required()
+		password: commonValidation.password.required(),
+		emailComm: commonValidation.emailComm
 	})
 }
 

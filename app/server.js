@@ -6,7 +6,7 @@ import cookieSession from 'cookie-session'
 import cookieParser from 'cookie-parser'
 import bodyParser from 'body-parser'
 
-import { FE_URL, COMPANY_NAME, NODE_ENV } from '../Config'
+import { FE_URL, APP_NAME, NODE_ENV } from '../Config'
 
 import { Routes } from '../Routes'
 import { sendResponse, Logger, logRequest } from '../Utils'
@@ -34,7 +34,7 @@ export const InitializeApp = () => {
 	app.use(
 		cookieSession({
 			name: 'session',
-			keys: [COMPANY_NAME],
+			keys: [APP_NAME],
 			maxAge: 24 * 60 * 60 * 100,
 			secure: NODE_ENV === 'prod',
 			httpOnly: true,

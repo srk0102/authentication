@@ -17,7 +17,7 @@ const userSchema = new Schema({
 	},
 	emailComm: {
 		type: Boolean,
-		default: false
+		default: true
 	},
 	verified: {
 		type: Boolean,

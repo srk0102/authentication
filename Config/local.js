@@ -1,7 +1,7 @@
 require('dotenv').config()
 
 //COMPANY DETAILS
-export const COMPANY_NAME = process.env.COMPANY_NAME
+export const APP_NAME = process.env.APP_NAME
 
 //LOCALS
 export const NODE_ENV = process.env.NODE_ENV

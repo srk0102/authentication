@@ -7,7 +7,7 @@ import { getUtcTime, addHours, addMonths, getMinutesDiff, Logger, sendResponse }
 
 export const verifyToken = async (req, res, next) => {
 	try {
-		const { token } = req.headers
+		const { token } = req.cookies
 		const { userId } = decryptToken(token)
 		const existingTokens = await TokenService.getOne({ token, userId, status: 'active' })
 		if (!existingTokens) {
@@ -70,7 +70,7 @@ export const generateSignUpToken = async (payload) => {
 
 		const token = jwt.sign({ ...payload, expiresAt: tkexp }, JWT_VALIDATION_KEY, { expiresIn: JWT_EXPIRY_TOKEN_TIME, algorithm: JWT_ALGO })
 
-		const linkToSignup = BE_URL +'auth/user/verify-email/' + token
+		const linkToSignup = BE_URL +'/auth/user/verify-email/' + token
 
 		return linkToSignup
 	} catch (err) {

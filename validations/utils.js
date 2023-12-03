@@ -16,6 +16,7 @@ export const commonValidation = {
 	source: Joi.string().lowercase().trim(),
 	password: Joi.string().min(8).max(16).pattern(PASSWORD_REGEX).message('password should contain at-least one capital letter, one small letter, one symbol and one number.The length of password should be in between 8-16.'),
 	profilePic: Joi.string().trim(),
+	emailComm: Joi.boolean(),
 	isActive: Joi.boolean(),
 	startDate: Joi.string(),
 	endDate: Joi.string(),

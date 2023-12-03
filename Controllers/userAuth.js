@@ -3,7 +3,7 @@ import axios from 'axios'
 import { generateToken, generateSignUpToken, decryptValidateToken } from '../Middlewares'
 import { Logger, sendResponse, encrypt, compare } from '../Utils'
 import { UserService } from '../Services'
-import { NODE_ENV, MAILING_SERVICE } from '../Config'
+import { NODE_ENV, MAILING_SERVICE, FE_URL } from '../Config'
 import { VALIDATION_TOKENS, EMAIL_TEMPLATE_KEYS } from '../Constants'
 import { Types } from 'mongoose'
 
@@ -21,7 +21,7 @@ export const signup = async (req, res) => {
 		const mailOptions = {
 			to: email,
 			source: EMAIL_TEMPLATE_KEYS.verifyEmail,
-			subject: 'verification email from content-creators-hub',
+			subject: `verification email from ${COMPANYNAME}`,
 			body: {
 				userName,
 				verificationLink
@@ -48,10 +48,8 @@ export const verifyEmail = async (req, res) => {
 		if (source !== VALIDATION_TOKENS.emailVerification) {
 			return sendResponse(res, UNAUTHORIZED, 'Sorry, Access Denied.', { token }, '')
 		}
-
 		await UserService.updateOne({ _id: new Types.ObjectId(userId) }, { verified: true })
-
-		return sendResponse(res, SUCCESS, 'Email verification: Mission Accomplished! 🚀📧🔒', {}, '')
+		return res.status(301).redirect(`${FE_URL}/login`)
 	} catch (err) {
 		Logger.error(err.message)
 		sendResponse(res, INTERNALSERVERERROR, 'oops! Verification failed', {}, err.message)
