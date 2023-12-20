@@ -1,6 +1,6 @@
 import { Router } from 'express'
 
-import { editorSignup, editorVerifyEmail, editorRequestVerificationEmail, editorLogin, verifyAuth } from '../Controllers'
+import { editorSignup, editorVerifyEmail, editorRequestVerificationEmail, editorLogin } from '../Controllers'
 import { editorUserSignup, userLogin, reqVerificationValidation } from '../validations'
 import { asyncWrapper, validateInput } from '../Utils'
 
