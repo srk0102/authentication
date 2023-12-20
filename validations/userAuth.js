@@ -6,9 +6,12 @@ export const userSignup = {
 	body: Joi.object({
 		email: commonValidation.email.required(),
 		userName: commonValidation.fullName.required(),
-		source: commonValidation.source.required(),
+		profilePic: commonValidation.profilePic,
 		password: commonValidation.password.required(),
-		emailComm: commonValidation.emailComm
+		emailComm: commonValidation.emailComm.required(),
+		contentPlatforms: Joi.array(),
+		country: commonValidation.country.required(),
+		description: commonValidation.description
 	})
 }
 
@@ -22,5 +25,11 @@ export const userLogin = {
 export const userPassword = {
 	body: Joi.object({
 		password: commonValidation.password.required()
+	})
+}
+
+export const reqVerificationValidation = {
+	body: Joi.object({
+		email: commonValidation.email.required(),
 	})
 }

@@ -1,13 +1,15 @@
 import { APP_NAME } from '../Config'
 
-import { UserRouter } from './userAuth'
 import { UserProfileRouter } from './userProfile'
+import { CreatorRouter } from './creator'
+import { EditorRouter } from './editor'
 
 import { Logger } from '../Utils'
 
 const Routes = [
-	{ path: '/user', router: UserRouter },
 	{ path: '/user-profile', router: UserProfileRouter },
+	{ path: '/creator', router: CreatorRouter },
+	{ path: '/editor', router: EditorRouter },
 ]
 
 Routes.init = (app) => {

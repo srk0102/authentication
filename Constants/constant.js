@@ -10,6 +10,7 @@ export const EMAIL = 'email'
 export const USER = 'user'
 export const TOKEN_STATUS = ['active', 'expired', 'suspended', 'loggedout']
 export const GENDER = ['Male', 'Female', 'Other', 'prefer not to say']
+export const USERTYPE = ['CREATOR', 'EDITOR']
 export const SIGNUP = 'signup'
 export const SIGNIN = 'signin'
 export const RESETPASSWORD = 'resetpassword'
@@ -20,6 +21,8 @@ export const COUNTRY_CODE_REGEX = /^(\+?\d{1,3}|\d{1,3})$/
 export const DEFAULT_COUNTRY_CODE = '+91'
 export const NAME_REGEX = /^[a-zA-z.' ]+([ ][a-zA-Z.' ]+)*$/
 export const PASSWORD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,16}$/
+
+export const ENTRY_TYPE = ['general', 'google']
 
 export const EMAIL_TEMPLATE_KEYS = {
 	resetPassword: 'reset-password',

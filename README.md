@@ -54,12 +54,7 @@ Ensure that you have properly set up the microservice and its dependencies befor
 
 The Authentication Microservice exposes the following API endpoints:
 
-- `POST /register`: User registration. Accepts user details and sends a verification email.
-- `POST /login`: User login. Generates a JWT token upon successful login.
-- `POST /logout`: User logout. Clears the user's session and JWT token.
-- `POST /forgot-password`: Password reset request. Sends an email with a password reset link.
-- `POST /reset-password`: Password reset. Sets a new password after receiving a valid reset token.
-- `GET /profile`: Get a user profile. Requires a valid JWT token for authentication.
+- This service has all authenticated required apis.
 
 For detailed information on request parameters and responses, see the [API documentation](./api-docs.md "API DOCUMENTATION").
 

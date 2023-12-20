@@ -63,14 +63,14 @@ export const generateToken = async (payload) => {
 	}
 }
 
-export const generateSignUpToken = async (payload) => {
+export const generateSignUpToken = async (payload, userType) => {
 	try {
 		const currentTime = getUtcTime()
 		const tkexp = addHours(currentTime, 24)
 
 		const token = jwt.sign({ ...payload, expiresAt: tkexp }, JWT_VALIDATION_KEY, { expiresIn: JWT_EXPIRY_TOKEN_TIME, algorithm: JWT_ALGO })
 
-		const linkToSignup = BE_URL +'/auth/user/verify-email/' + token
+		const linkToSignup = `${BE_URL}${userType === 'creator' ? '/auth/creator/verify-email/' : '/auth/editor/verify-email/'}${token}`
 
 		return linkToSignup
 	} catch (err) {

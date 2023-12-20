@@ -2,22 +2,21 @@ import axios from 'axios'
 
 import { generateToken, generateSignUpToken, decryptValidateToken } from '../Middlewares'
 import { Logger, sendResponse, encrypt, compare } from '../Utils'
-import { UserService } from '../Services'
-import { NODE_ENV, MAILING_SERVICE, FE_URL } from '../Config'
+import { EditorService } from '../Services'
+import { NODE_ENV, MAILING_SERVICE, EDITOR_FE_URL } from '../Config'
 import { VALIDATION_TOKENS, EMAIL_TEMPLATE_KEYS } from '../Constants'
 import { Types } from 'mongoose'
 
-export const signup = async (req, res) => {
+export const editorSignup = async (req, res) => {
 	try {
-		const { email, password, userName, source } = req.body
-		const encryptedPassword = encrypt(password)
-		const existingUser = await UserService.getOne({ email }, { email: 1, _id: 0 })
+		const { userName, password, email, profilePic, contentPlatforms, emailComm, country, description } = req.body
+		const existingUser = await EditorService.getOne({ email })
 		if (existingUser) {
 			return sendResponse(res, FORBIDDEN, '', { existingUser }, `Welcome back ${existingUser.userName}! Let's get you logged in!`)
 		}
-		const newUser = await UserService.create({ email, password: encryptedPassword, userName, source })
-		const verificationLink = await generateSignUpToken({ userId: newUser._id, source: VALIDATION_TOKENS.emailVerification })
-
+		const encryptedPassword = encrypt(password)
+		const newUser = await EditorService.create({ email, password: encryptedPassword, userName, profilePic, contentPlatforms, description, emailComm, country, entryType: 'general' })
+		const verificationLink = await generateSignUpToken({ userId: newUser._id, source: VALIDATION_TOKENS.emailVerification }, 'editor')
 		const mailOptions = {
 			to: email,
 			source: EMAIL_TEMPLATE_KEYS.verifyEmail,
@@ -28,7 +27,7 @@ export const signup = async (req, res) => {
 			}
 		}
 
-		axios.post(MAILING_SERVICE.WELCOME, {to:email, userName})
+		axios.post(MAILING_SERVICE.WELCOME, { to: email, userName })
 		await axios.post(MAILING_SERVICE.SOURCE_EMAIL, mailOptions)
 
 		return sendResponse(res, SUCCESS, 'Check your registered email for a magical message! 💌 Verify within 24 hours. 🕒✨', {}, '')
@@ -40,7 +39,7 @@ export const signup = async (req, res) => {
 	}
 }
 
-export const verifyEmail = async (req, res) => {
+export const editorVerifyEmail = async (req, res) => {
 	try {
 		const { token } = req.params
 		const { userId, source } = decryptValidateToken(token)
@@ -48,8 +47,8 @@ export const verifyEmail = async (req, res) => {
 		if (source !== VALIDATION_TOKENS.emailVerification) {
 			return sendResponse(res, UNAUTHORIZED, 'Sorry, Access Denied.', { token }, '')
 		}
-		await UserService.updateOne({ _id: new Types.ObjectId(userId) }, { verified: true })
-		return res.status(301).redirect(`${FE_URL}/login`)
+		await EditorService.updateOne({ _id: new Types.ObjectId(userId) }, { verified: true })
+		return res.status(301).redirect(`${EDITOR_FE_URL}/login`)
 	} catch (err) {
 		Logger.error(err.message)
 		sendResponse(res, INTERNALSERVERERROR, 'oops! Verification failed', {}, err.message)
@@ -57,10 +56,10 @@ export const verifyEmail = async (req, res) => {
 	}
 }
 
-export const requestVerificationEmail = async (req, res) => {
+export const editorRequestVerificationEmail = async (req, res) => {
 	try {
 		const { email } = req.body
-		const existingUser = await UserService.getOne({ email })
+		const existingUser = await EditorService.getOne({ email })
 		if (!existingUser) {
 			return sendResponse(res, UNAUTHORIZED, '', {}, 'Apologies, we couldn\'t find your record in our registry.')
 		}
@@ -76,10 +75,10 @@ export const requestVerificationEmail = async (req, res) => {
 	}
 }
 
-export const login = async (req, res) => {
+export const editorLogin = async (req, res) => {
 	try {
 		const { email, password } = req.body
-		const existingUser = await UserService.getOne({ email })
+		const existingUser = await EditorService.getOne({ email })
 		if (!existingUser) {
 			return sendResponse(res, UNAUTHORIZED, '', {}, 'Apologies, we couldn\'t find your record in our registry.')
 		}
@@ -96,22 +95,9 @@ export const login = async (req, res) => {
 			httpOnly: true,
 			secure: NODE_ENV === 'prod',
 		})
-
-		return sendResponse(res, SUCCESS, 'Login successful', {}, '')
 	} catch (err) {
 		Logger.error(err.message)
 		sendResponse(res, INTERNALSERVERERROR, 'Login failed', {}, err.message)
-		throw err
-	}
-}
-
-export const verifyAuth = async (req, res) => {
-	try {
-		sendResponse(res, SUCCESS, 'Token verified', {}, '')
-	}
-	catch (err) {
-		Logger.error(err.message)
-		sendResponse(res, INTERNALSERVERERROR, '', {}, err.message)
 		throw err
 	}
 }

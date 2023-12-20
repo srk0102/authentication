@@ -6,7 +6,7 @@ import customParseFormat from 'dayjs/plugin/customParseFormat'
 
 const Joi = JoiBase.extend(JoiDate) // extend Joi with Joi Date
 
-import { DATEFORMAT, PASSWORD_REGEX } from '../Constants'
+import { DATEFORMAT, PASSWORD_REGEX, USERTYPE } from '../Constants'
 
 export const commonValidation = {
 	otp: Joi.string().min(4).max(4),
@@ -15,7 +15,10 @@ export const commonValidation = {
 	dob: Joi.date().format(DATEFORMAT).raw(),
 	source: Joi.string().lowercase().trim(),
 	password: Joi.string().min(8).max(16).pattern(PASSWORD_REGEX).message('password should contain at-least one capital letter, one small letter, one symbol and one number.The length of password should be in between 8-16.'),
+	userType: Joi.string().valid(...USERTYPE).trim(),
+	country: Joi.string().min(4).max(16).trim(),
 	profilePic: Joi.string().trim(),
+	description: Joi.string().trim(),
 	emailComm: Joi.boolean(),
 	isActive: Joi.boolean(),
 	startDate: Joi.string(),

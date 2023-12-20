@@ -9,6 +9,8 @@ export const PORT = process.env.PORT ? process.env.PORT : 8000
 
 //BASE URLS
 export const FE_URL = process.env.FE_URL
+export const CREATOR_FE_URL = process.env.CREATOR_FE_URL
+export const EDITOR_FE_URL = process.env.EDITOR_FE_URL
 export const BE_URL = process.env.BE_URL
 export const APP_URL = process.env.APP_URL
 export const NOTIFICATION_URL = process.env.NOTIFICATION_URL
