@@ -49,9 +49,6 @@ export const JWT_EXPIRY_REFRESH_TIME = process.env.JWT_EXPIRY_REFRESH_TIME
 export const JWT_ALGO = process.env.JWT_ALGO
 export const JWT_VALIDATION_KEY = process.env.JWT_VALIDATION_KEY
 
-//META
-export const META_TOKEN = process.env.META_TOKEN
-
 //MICROSERVICES
 export const MAILING_SERVICE = {
 	WELCOME: process.env.NOTIFICATION_URL + '/email/welcome',

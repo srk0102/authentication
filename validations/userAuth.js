@@ -11,7 +11,8 @@ export const userSignup = {
 		emailComm: commonValidation.emailComm.required(),
 		contentPlatforms: Joi.array(),
 		country: commonValidation.country.required(),
-		description: commonValidation.description
+		description: commonValidation.description,
+		links: Joi.array()
 	})
 }
 
