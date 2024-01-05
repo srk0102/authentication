@@ -8,7 +8,7 @@
     "dev": "nodemon --exec NODE_ENV=dev npm run start",
     "build": "rm -rf dist && babel . --out-dir dist --ignore node_modules && cp package.json dist",
     "serve": "--exec NODE_ENV=prod node dist/.",
-    "heroku-prebuild": "npm install && npm run build",
+    "heroku-prebuild": "npm install",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
